@@ -98,6 +98,11 @@ const getFilteredProducts = (categoryId: string, sortData: TListSort, filters: T
     const aValue = a[sortData.sortName as keyof typeof a];
     const bValue = b[sortData.sortName as keyof typeof b];
 
+    // Handle null values - treat null as smaller than any value
+    if (aValue === null && bValue === null) return 0;
+    if (aValue === null) return sortData.sortType === "asc" ? -1 : 1;
+    if (bValue === null) return sortData.sortType === "asc" ? 1 : -1;
+
     if (sortData.sortType === "asc") {
       return aValue > bValue ? 1 : -1;
     } else {
