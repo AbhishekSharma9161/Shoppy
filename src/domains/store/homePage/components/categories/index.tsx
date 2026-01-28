@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { getAllCategoriesJSON } from "@/actions/category/category";
-import { SK_Box } from "@/shared/components/UI/skeleton";
 import { TGroupJSON } from "@/shared/types/categories";
 
 import CategoryListItem from "./catListItem";
@@ -156,12 +154,4 @@ export const HomeCategoryList = () => {
       </ul>
     </div>
   );
-};
-
-const Skeletons = () => {
-  const skeletons: React.ReactNode[] = [];
-  for (let i = 0; i <= 10; i++) {
-    skeletons.push(<SK_Box key={i} width="100%" height="16px" />);
-  }
-  return skeletons;
 };

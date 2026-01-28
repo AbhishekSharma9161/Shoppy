@@ -35,7 +35,7 @@ const SearchPage = () => {
                 } else {
                     setProducts(result.products);
                 }
-            } catch (err) {
+            } catch {
                 setError("An error occurred while searching");
             } finally {
                 setIsLoading(false);
@@ -51,7 +51,7 @@ const SearchPage = () => {
                 <div className="storeContainer">
                     <div className="w-full h-auto md:h-[130px] py-5 px-2.5 md:p-0 flex flex-col justify-center items-center bg-gray-200/80">
                         <h1 className="text-2xl block font-light text-gray-900 mb-2">
-                            Searching for "{query}"
+                            Searching for &quot;{query}&quot;
                         </h1>
                     </div>
                     <div className="flex flex-wrap gap-4 mt-7 ml-2 mb-[400px]">

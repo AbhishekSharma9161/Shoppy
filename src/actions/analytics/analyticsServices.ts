@@ -1,6 +1,6 @@
 "use server";
-import { mockProducts } from "@/shared/data/mockProducts";
 import { mockCategories } from "@/shared/data/mockCategories";
+import { mockProducts } from "@/shared/data/mockProducts";
 
 interface Product {
     id: string;

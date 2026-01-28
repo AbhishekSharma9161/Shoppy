@@ -1,8 +1,8 @@
 "use server";
-import { mockCategories } from "@/shared/data/mockCategories";
-import { mockProducts, mockBrands } from "@/shared/data/mockProducts";
 import { TFilters, TListItem } from "@/domains/store/productList/types";
 import { TListSort } from "@/domains/store/productList/types/";
+import { mockCategories } from "@/shared/data/mockCategories";
+import { mockProducts } from "@/shared/data/mockProducts";
 import { TProductPath } from "@/shared/types/product";
 
 export const getList = async (path: string, sortData: TListSort, filters: TFilters) => {
@@ -34,7 +34,7 @@ const pathToArray = (path: string) => {
 };
 
 const findCategoryFromPath = (pathArray: string[]) => {
-  let currentCategories = mockCategories;
+  const currentCategories = mockCategories;
   let foundCategory = null;
 
   for (const pathSegment of pathArray) {
@@ -67,7 +67,7 @@ const getSubCategories = (categoryId: string): TProductPath[] => {
 };
 
 const getFilteredProducts = (categoryId: string, sortData: TListSort, filters: TFilters): TListItem[] => {
-  let filteredProducts = mockProducts.filter(product => {
+  const filteredProducts = mockProducts.filter(product => {
     // Filter by category
     if (!product.categoryID.startsWith(categoryId.split('-')[0])) {
       return false;

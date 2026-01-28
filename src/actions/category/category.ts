@@ -1,7 +1,15 @@
 "use server";
 import { mockCategories } from "@/shared/data/mockCategories";
-import { mockBrands } from "@/shared/data/mockProducts";
-import { TCategory, TGroupJSON } from "@/shared/types/categories";
+import { TGroupJSON } from "@/shared/types/categories";
+
+interface CategoryData {
+  id?: string;
+  name: string;
+  url?: string;
+  iconUrl?: string;
+  iconSize?: [number, number];
+  parentID?: string | null;
+}
 
 export const getAllCategories = async () => {
   // Simulate API delay
@@ -44,13 +52,13 @@ export const getAllCategoriesJSON = async () => {
   return { res: groups };
 };
 
-export const addCategory = async (data: any) => {
+export const addCategory = async (data: CategoryData) => {
   // Mock implementation - just return success
   await new Promise(resolve => setTimeout(resolve, 300));
   return { res: { id: Date.now().toString(), ...data } };
 };
 
-export const updateCategory = async (data: any) => {
+export const updateCategory = async (data: CategoryData) => {
   // Mock implementation - just return success
   await new Promise(resolve => setTimeout(resolve, 300));
   return { res: data };

@@ -1,4 +1,3 @@
-import { mockBrands } from "@/shared/data/mockProducts";
 import { TBrand } from "@/shared/types";
 
 import { TFilters, TListItem } from "../types";

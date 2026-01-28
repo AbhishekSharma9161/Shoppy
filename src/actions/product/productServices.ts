@@ -1,6 +1,6 @@
 "use server";
-import { mockProducts } from "@/shared/data/mockProducts";
 import { mockCategories } from "@/shared/data/mockCategories";
+import { mockProducts } from "@/shared/data/mockProducts";
 
 export const getProductById = async (productId: string) => {
     // Simulate API delay
@@ -56,7 +56,19 @@ const getCategoryPath = (categoryId: string) => {
     return path;
 };
 
-const generateSpecifications = (product: any) => {
+interface Product {
+    id: string;
+    name: string;
+    price: number;
+    salePrice: number | null;
+    isAvailable: boolean;
+    images: string[];
+    specialFeatures: string[];
+    categoryID: string;
+    brand: { id: string; name: string };
+}
+
+const generateSpecifications = (product: Product) => {
     const specs = [];
 
     if (product.categoryID.startsWith('3')) { // Smartphones
@@ -126,7 +138,7 @@ const generateSpecifications = (product: any) => {
     return specs;
 };
 
-const generateDescription = (product: any) => {
+const generateDescription = (product: Product) => {
     const features = product.specialFeatures.join(", ");
     return `Experience the ${product.name} with ${features}. This premium ${product.brand.name} product delivers exceptional performance and quality. Perfect for users who demand the best in technology and design.`;
 };

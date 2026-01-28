@@ -146,7 +146,7 @@ const NavBarCategory = ({ isNavbarVisible: isNavbarHide }: TProps) => {
           setCategories(result.res);
         }
         // If no categories from DB, keep using fallback categories
-      } catch (error) {
+      } catch {
         console.log("Using fallback categories due to DB connection issue");
         // Keep using fallback categories
       }

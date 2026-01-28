@@ -1,6 +1,6 @@
 "use server";
-import { mockProducts } from "@/shared/data/mockProducts";
 import { TListItem } from "@/domains/store/productList/types";
+import { mockProducts } from "@/shared/data/mockProducts";
 
 export const searchProducts = async (searchQuery: string): Promise<{ products: TListItem[], error?: string }> => {
     // Simulate API delay

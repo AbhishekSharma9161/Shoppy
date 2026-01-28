@@ -1,12 +1,50 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { getAnalytics, getTopSellingProducts } from "@/actions/analytics/analyticsServices";
 import { mockProducts } from "@/shared/data/mockProducts";
 
+interface Analytics {
+    overview: {
+        totalProducts: number;
+        inStockProducts: number;
+        outOfStockProducts: number;
+        productsOnSale: number;
+        avgPrice: number;
+        totalCategories: number;
+    };
+    topBrands: Array<{ brand: string; count: number }>;
+    categoryDistribution: Array<{
+        category: string;
+        count: number;
+        inStock: number;
+        onSale: number;
+    }>;
+    priceRanges: Array<{ range: string; count: number }>;
+    recentActivity: Array<{
+        id: number;
+        activity: string;
+        timestamp: string;
+        type: string;
+    }>;
+}
+
+interface TopProduct {
+    id: string;
+    name: string;
+    price: number;
+    salePrice: number | null;
+    isAvailable: boolean;
+    brand: { id: string; name: string };
+    rank: number;
+    salesCount: number;
+    revenue: number;
+}
+
 const DemoPage = () => {
-    const [analytics, setAnalytics] = useState<any>(null);
-    const [topProducts, setTopProducts] = useState<any[]>([]);
+    const [analytics, setAnalytics] = useState<Analytics | null>(null);
+    const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -74,7 +112,7 @@ const DemoPage = () => {
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
                         <h2 className="text-xl font-semibold text-gray-900 mb-4">🏆 Top Brands</h2>
                         <div className="space-y-3">
-                            {analytics?.topBrands.map((brand: any, index: number) => (
+                            {analytics?.topBrands.map((brand: { brand: string; count: number }, index: number) => (
                                 <div key={brand.brand} className="flex items-center justify-between">
                                     <div className="flex items-center">
                                         <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
@@ -92,7 +130,7 @@ const DemoPage = () => {
                     <div className="bg-white p-6 rounded-lg border border-gray-200">
                         <h2 className="text-xl font-semibold text-gray-900 mb-4">💰 Price Distribution</h2>
                         <div className="space-y-3">
-                            {analytics?.priceRanges.map((range: any) => (
+                            {analytics?.priceRanges.map((range: { range: string; count: number }) => (
                                 <div key={range.range} className="flex items-center justify-between">
                                     <span className="text-gray-700">{range.range}</span>
                                     <div className="flex items-center">
@@ -114,7 +152,7 @@ const DemoPage = () => {
                 <div className="bg-white p-6 rounded-lg border border-gray-200 mb-8">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">📱 Category Distribution</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {analytics?.categoryDistribution.map((category: any) => (
+                        {analytics?.categoryDistribution.map((category: { category: string; count: number; inStock: number; onSale: number }) => (
                             <div key={category.category} className="p-4 bg-gray-50 rounded-lg">
                                 <h3 className="font-medium text-gray-900 mb-2">{category.category}</h3>
                                 <div className="space-y-1 text-sm">
@@ -191,7 +229,7 @@ const DemoPage = () => {
                 <div className="bg-white p-6 rounded-lg border border-gray-200">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">📈 Recent Activity</h2>
                     <div className="space-y-3">
-                        {analytics?.recentActivity.map((activity: any) => (
+                        {analytics?.recentActivity.map((activity: { id: number; activity: string; timestamp: string; type: string }) => (
                             <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
                                 <div className={`w-2 h-2 rounded-full mt-2 ${activity.type === 'product' ? 'bg-blue-500' : 'bg-green-500'
                                     }`}></div>
