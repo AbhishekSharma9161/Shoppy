@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ import { ProductListSkeleton } from "@/domains/store/productList/components";
 import { TListItem } from "@/domains/store/productList/types";
 import { IMAGE_BASE_URL } from "@/shared/constants/store";
 
-const SearchPage = () => {
+const SearchContent = () => {
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
 
@@ -119,6 +120,27 @@ const SearchPage = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+const SearchPage = () => {
+    return (
+        <Suspense fallback={
+            <div className="mt-40 bg-white">
+                <div className="storeContainer">
+                    <div className="w-full h-auto md:h-[130px] py-5 px-2.5 md:p-0 flex flex-col justify-center items-center bg-gray-200/80">
+                        <h1 className="text-2xl block font-light text-gray-900 mb-2">
+                            Loading search...
+                        </h1>
+                    </div>
+                    <div className="flex flex-wrap gap-4 mt-7 ml-2 mb-[400px]">
+                        <ProductListSkeleton />
+                    </div>
+                </div>
+            </div>
+        }>
+            <SearchContent />
+        </Suspense>
     );
 };
 
