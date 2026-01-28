@@ -30,21 +30,21 @@ const mockOptionSets: TOptionSet[] = [
     id: "option-1",
     name: "Color",
     type: "COLOR",
-    options: JSON.stringify([
+    options: [
       { name: "Black", value: "#000000" },
       { name: "White", value: "#FFFFFF" },
       { name: "Blue", value: "#0066CC" }
-    ])
+    ]
   },
   {
     id: "option-2",
     name: "Storage",
     type: "TEXT",
-    options: JSON.stringify([
+    options: [
       { name: "128GB", value: "128GB" },
       { name: "256GB", value: "256GB" },
       { name: "512GB", value: "512GB" }
-    ])
+    ]
   }
 ];
 
@@ -53,12 +53,12 @@ const mockSpecGroups: TSpecGroup[] = [
   {
     id: "spec-1",
     title: "Display",
-    specs: JSON.stringify(["Screen Size", "Resolution", "Technology"])
+    specs: ["Screen Size", "Resolution", "Technology"]
   },
   {
     id: "spec-2",
     title: "Performance",
-    specs: JSON.stringify(["Processor", "RAM", "Storage"])
+    specs: ["Processor", "RAM", "Storage"]
   }
 ];
 
@@ -86,7 +86,7 @@ export const addOptionSet = async (data: TOptionSet) => {
       id: `option-${Date.now()}`,
       name: data.name,
       type: data.type,
-      options: "[]"
+      options: []
     };
 
     return { res: newOptionSet };
@@ -159,7 +159,7 @@ export const addSpecGroup = async (data: TSpecGroup) => {
     const newSpecGroup = {
       id: `spec-${Date.now()}`,
       title: data.title,
-      specs: "[]"
+      specs: []
     };
 
     return { res: newSpecGroup };

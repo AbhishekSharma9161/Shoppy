@@ -5,27 +5,27 @@ const mockSpecGroups = [
   {
     id: "spec-1",
     title: "Display",
-    specs: JSON.stringify(["Screen Size", "Resolution", "Technology", "Refresh Rate"])
+    specs: ["Screen Size", "Resolution", "Technology", "Refresh Rate"]
   },
   {
     id: "spec-2",
     title: "Performance",
-    specs: JSON.stringify(["Processor", "RAM", "Storage", "Graphics"])
+    specs: ["Processor", "RAM", "Storage", "Graphics"]
   },
   {
     id: "spec-3",
     title: "Camera",
-    specs: JSON.stringify(["Main Camera", "Front Camera", "Video Recording", "Features"])
+    specs: ["Main Camera", "Front Camera", "Video Recording", "Features"]
   },
   {
     id: "spec-4",
     title: "Battery & Charging",
-    specs: JSON.stringify(["Battery Capacity", "Charging Speed", "Wireless Charging", "Battery Life"])
+    specs: ["Battery Capacity", "Charging Speed", "Wireless Charging", "Battery Life"]
   },
   {
     id: "spec-5",
     title: "Connectivity",
-    specs: JSON.stringify(["Network", "WiFi", "Bluetooth", "Ports"])
+    specs: ["Network", "WiFi", "Bluetooth", "Ports"]
   }
 ];
 
