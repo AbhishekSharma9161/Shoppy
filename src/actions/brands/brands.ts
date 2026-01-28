@@ -1,7 +1,7 @@
 "use server";
 import { z } from "zod";
 
-import { db } from "@/shared/lib/db";
+import { mockBrands } from "@/shared/data/mockProducts";
 import { TBrand } from "@/shared/types";
 
 const ValidateUpdateBrand = z.object({
@@ -13,13 +13,13 @@ export const addBrand = async (brandName: string) => {
   if (!brandName || brandName === "") return { error: "Invalid Data!" };
 
   try {
-    const result = db.brand.create({
-      data: {
-        name: brandName,
-      },
-    });
-    if (!result) return { error: "Can't Insert Data" };
-    return { res: result };
+    // Mock implementation - simulate adding brand
+    const newBrand = {
+      id: `brand-${Date.now()}`,
+      name: brandName,
+    };
+
+    return { res: newBrand };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
@@ -27,9 +27,12 @@ export const addBrand = async (brandName: string) => {
 
 export const getAllBrands = async () => {
   try {
-    const result: TBrand[] | null = await db.brand.findMany();
+    // Return mock brands data
+    const result = mockBrands.map(brand => ({
+      id: brand.id,
+      name: brand.name
+    }));
 
-    if (!result) return { error: "Can't Get Data from Database!" };
     return { res: result };
   } catch (error) {
     return { error: JSON.stringify(error) };
@@ -38,15 +41,15 @@ export const getAllBrands = async () => {
 
 export const deleteBrand = async (brandID: string) => {
   if (!brandID || brandID === "") return { error: "Invalid Data!" };
-  try {
-    const result = await db.brand.delete({
-      where: {
-        id: brandID,
-      },
-    });
 
-    if (!result) return { error: "Can't Delete!" };
-    return { res: result };
+  try {
+    // Mock implementation - simulate deletion
+    const brandExists = mockBrands.find(b => b.id === brandID);
+    if (!brandExists) {
+      return { error: "Brand not found" };
+    }
+
+    return { res: { id: brandID, deleted: true } };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
@@ -56,17 +59,18 @@ export const updateBrand = async (data: TBrand) => {
   if (!ValidateUpdateBrand.safeParse(data).success) return { error: "Invalid Data!" };
 
   try {
-    const result = await db.brand.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        name: data.name,
-      },
-    });
+    // Mock implementation - simulate update
+    const brandExists = mockBrands.find(b => b.id === data.id);
+    if (!brandExists) {
+      return { error: "Brand not found" };
+    }
 
-    if (!result) return { error: "Can't Delete!" };
-    return { res: result };
+    const updatedBrand = {
+      id: data.id,
+      name: data.name,
+    };
+
+    return { res: updatedBrand };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }

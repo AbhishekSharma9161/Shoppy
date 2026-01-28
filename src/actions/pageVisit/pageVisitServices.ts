@@ -1,9 +1,7 @@
 "use server";
-import { PageType } from "@prisma/client";
 import { z } from "zod";
 
 import { TRAFFIC_LIST_PAGE_SIZE } from "@/shared/constants/admin/trafficView";
-import { db } from "@/shared/lib/db";
 import { TAddPageVisit } from "@/shared/types/common";
 
 const ValidatePageVisit = z.object({
@@ -13,7 +11,7 @@ const ValidatePageVisit = z.object({
 export type TTrafficListItem = {
   id: string;
   time: Date | null;
-  pageType: PageType;
+  pageType: "MAIN" | "LIST" | "PRODUCT";
   pagePath: string | null;
   productID: string | null;
   deviceResolution: string | null;
@@ -25,23 +23,59 @@ export type TTrafficListItem = {
   } | null;
 };
 
+// Mock traffic data
+const mockTrafficData: TTrafficListItem[] = [
+  {
+    id: "visit-1",
+    time: new Date(),
+    pageType: "MAIN",
+    pagePath: "/",
+    productID: null,
+    deviceResolution: "1920x1080",
+    product: null
+  },
+  {
+    id: "visit-2",
+    time: new Date(Date.now() - 3600000),
+    pageType: "PRODUCT",
+    pagePath: "/product/iphone-1",
+    productID: "iphone-1",
+    deviceResolution: "1366x768",
+    product: {
+      name: "iPhone 15 Pro Max",
+      category: {
+        name: "Smartphones"
+      }
+    }
+  },
+  {
+    id: "visit-3",
+    time: new Date(Date.now() - 7200000),
+    pageType: "LIST",
+    pagePath: "/list/smartphones",
+    productID: null,
+    deviceResolution: "1920x1080",
+    product: null
+  }
+];
+
 export const addVisit = async (data: TAddPageVisit) => {
   if (process.env.NODE_ENV !== "production") return { error: "Invalid ENV!" };
 
   if (!ValidatePageVisit.safeParse(data).success) return { error: "Invalid Data!" };
 
   try {
-    const result = await db.pageVisit.create({
-      data: {
-        pageType: data.pageType,
-        pagePath: data.pagePath,
-        productID: data.productID,
-        deviceResolution: data.deviceResolution,
-      },
-    });
+    // Mock implementation - simulate adding visit
+    const newVisit = {
+      id: `visit-${Date.now()}`,
+      time: new Date(),
+      pageType: data.pageType,
+      pagePath: data.pagePath,
+      productID: data.productID,
+      deviceResolution: data.deviceResolution,
+    };
 
-    if (!result) return { error: "Invalid Data!" };
-    return { res: result };
+    return { res: newVisit };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
@@ -49,29 +83,10 @@ export const addVisit = async (data: TAddPageVisit) => {
 
 export const getTrafficReport = async (skip: number = 0) => {
   try {
-    const [list, totalCount] = await Promise.all([
-      db.pageVisit.findMany({
-        skip: skip,
-        take: TRAFFIC_LIST_PAGE_SIZE,
-        include: {
-          product: {
-            select: {
-              name: true,
-              category: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          id: "desc",
-        },
-      }),
-      db.pageVisit.count(),
-    ]);
-    if (!list) return { error: "Can not read Data!" };
+    // Mock implementation - return paginated traffic data
+    const list = mockTrafficData.slice(skip, skip + TRAFFIC_LIST_PAGE_SIZE);
+    const totalCount = mockTrafficData.length;
+
     return { res: { list, totalCount } };
   } catch (error) {
     return { error: JSON.stringify(error) };
@@ -82,13 +97,13 @@ export const deleteTraffic = async (id: string) => {
   if (!id || id === "") return { error: "Invalid Data!" };
 
   try {
-    const result = await db.pageVisit.delete({
-      where: {
-        id,
-      },
-    });
-    if (!result) return { error: "Can not read Data!" };
-    return { res: result };
+    // Mock implementation - simulate deletion
+    const visitExists = mockTrafficData.find(v => v.id === id);
+    if (!visitExists) {
+      return { error: "Visit not found" };
+    }
+
+    return { res: { id, deleted: true } };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }

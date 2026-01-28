@@ -1,14 +1,12 @@
 "use server";
 
-import { OptionSetType } from "@prisma/client";
 import { z } from "zod";
 
-import { db } from "@/shared/lib/db";
 import { TOptionSet, TSingleOption, TSingleSpec, TSpecGroup } from "@/shared/types/common";
 
 const AddOptionSet = z.object({
   name: z.string().min(3),
-  type: z.enum([OptionSetType.COLOR, OptionSetType.TEXT]),
+  type: z.enum(["COLOR", "TEXT"]),
 });
 
 const SingleOption = z.object({
@@ -26,21 +24,53 @@ const SingleSpec = z.object({
   value: z.string().min(3),
 });
 
+// Mock option sets data
+const mockOptionSets: TOptionSet[] = [
+  {
+    id: "option-1",
+    name: "Color",
+    type: "COLOR",
+    options: JSON.stringify([
+      { name: "Black", value: "#000000" },
+      { name: "White", value: "#FFFFFF" },
+      { name: "Blue", value: "#0066CC" }
+    ])
+  },
+  {
+    id: "option-2",
+    name: "Storage",
+    type: "TEXT",
+    options: JSON.stringify([
+      { name: "128GB", value: "128GB" },
+      { name: "256GB", value: "256GB" },
+      { name: "512GB", value: "512GB" }
+    ])
+  }
+];
+
+// Mock spec groups data
+const mockSpecGroups: TSpecGroup[] = [
+  {
+    id: "spec-1",
+    title: "Display",
+    specs: JSON.stringify(["Screen Size", "Resolution", "Technology"])
+  },
+  {
+    id: "spec-2",
+    title: "Performance",
+    specs: JSON.stringify(["Processor", "RAM", "Storage"])
+  }
+];
+
 export const getOptionSetByCatID = async (categoryID: string) => {
   if (!categoryID || categoryID === "") return { error: "Invalid Data!" };
 
   try {
-    const result: TOptionSet[] = await db.optionSet.findMany({
-      where: {
-        Category_Option: {
-          some: {
-            categoryID: categoryID,
-          },
-        },
-      },
-    });
+    // Mock implementation - return relevant option sets for category
+    const result = mockOptionSets.filter(optionSet =>
+      categoryID.startsWith('3') || categoryID.startsWith('2') // Smartphones and tablets
+    );
 
-    if (!result) return { error: "Not Found!" };
     return { res: result };
   } catch (error) {
     return { error: JSON.stringify(error) };
@@ -51,25 +81,15 @@ export const addOptionSet = async (data: TOptionSet) => {
   if (!AddOptionSet.safeParse(data).success) return { error: "Invalid Data" };
 
   try {
-    const result = await db.category.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        Category_Option: {
-          create: {
-            option: {
-              create: {
-                name: data.name,
-                type: data.type,
-              },
-            },
-          },
-        },
-      },
-    });
-    if (!result) return { error: "failed" };
-    return { res: result };
+    // Mock implementation - simulate adding option set
+    const newOptionSet = {
+      id: `option-${Date.now()}`,
+      name: data.name,
+      type: data.type,
+      options: "[]"
+    };
+
+    return { res: newOptionSet };
   } catch (error) {
     return { res: JSON.stringify(error) };
   }
@@ -79,13 +99,13 @@ export const deleteOptionSet = async (id: string) => {
   if (!id || id === "") return { error: "Invalid Data" };
 
   try {
-    const result = await db.optionSet.delete({
-      where: {
-        id,
-      },
-    });
-    if (!result) return { error: "failed" };
-    return { res: result };
+    // Mock implementation - simulate deletion
+    const optionExists = mockOptionSets.find(o => o.id === id);
+    if (!optionExists) {
+      return { error: "Option set not found" };
+    }
+
+    return { res: { id, deleted: true } };
   } catch (error) {
     return { res: JSON.stringify(error) };
   }
@@ -96,48 +116,19 @@ export const addSingleOption = async (data: TSingleOption) => {
   if (!SingleOption.safeParse(data).success) return { error: "Invalid Data!" };
 
   try {
-    const result = await db.optionSet.update({
-      where: {
-        id: data.optionSetID,
-      },
-      data: {
-        options: {
-          push: {
-            name: data.name,
-            value: data.value,
-          },
-        },
-      },
-    });
-
-    if (!result) return { error: "Can't Insert!" };
-    return { res: result };
+    // Mock implementation - simulate adding single option
+    return { res: { optionSetID: data.optionSetID, added: true } };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
 };
+
 export const deleteSingleOption = async (data: TSingleOption) => {
   if (!SingleOption.safeParse(data).success) return { error: "Invalid Data!" };
 
   try {
-    const result = await db.optionSet.update({
-      where: {
-        id: data.optionSetID,
-      },
-      data: {
-        options: {
-          deleteMany: {
-            where: {
-              name: data.name,
-              value: data.name,
-            },
-          },
-        },
-      },
-    });
-
-    if (!result) return { error: "Can't Delete!" };
-    return { res: result };
+    // Mock implementation - simulate deleting single option
+    return { res: { optionSetID: data.optionSetID, deleted: true } };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
@@ -149,17 +140,11 @@ export const getSpecGroupByCatID = async (categoryID: string) => {
   if (!categoryID || categoryID === "") return { error: "Invalid Data!" };
 
   try {
-    const result: TSpecGroup[] = await db.specGroup.findMany({
-      where: {
-        Category_SpecGroup: {
-          some: {
-            categoryID: categoryID,
-          },
-        },
-      },
-    });
+    // Mock implementation - return relevant spec groups for category
+    const result = mockSpecGroups.filter(specGroup =>
+      categoryID.startsWith('3') || categoryID.startsWith('2') || categoryID.startsWith('1')
+    );
 
-    if (!result) return { error: "Not Found!" };
     return { res: result };
   } catch (error) {
     return { error: JSON.stringify(error) };
@@ -170,39 +155,30 @@ export const addSpecGroup = async (data: TSpecGroup) => {
   if (!AddSpecGroup.safeParse(data).success) return { error: "Invalid Data" };
 
   try {
-    const result = await db.category.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        Category_SpecGroup: {
-          create: {
-            specGroup: {
-              create: {
-                title: data.title,
-                specs: [],
-              },
-            },
-          },
-        },
-      },
-    });
-    if (!result) return { error: "failed" };
-    return { res: result };
+    // Mock implementation - simulate adding spec group
+    const newSpecGroup = {
+      id: `spec-${Date.now()}`,
+      title: data.title,
+      specs: "[]"
+    };
+
+    return { res: newSpecGroup };
   } catch (error) {
     return { res: JSON.stringify(error) };
   }
 };
+
 export const deleteSpecGroup = async (id: string) => {
   if (!id || id === "") return { error: "Invalid Data" };
+
   try {
-    const result = await db.specGroup.delete({
-      where: {
-        id,
-      },
-    });
-    if (!result) return { error: "failed" };
-    return { res: result };
+    // Mock implementation - simulate deletion
+    const specExists = mockSpecGroups.find(s => s.id === id);
+    if (!specExists) {
+      return { error: "Spec group not found" };
+    }
+
+    return { res: { id, deleted: true } };
   } catch (error) {
     return { res: JSON.stringify(error) };
   }
@@ -211,50 +187,21 @@ export const deleteSpecGroup = async (id: string) => {
 // ------------------------- SINGLE SPEC -------------------------
 export const addSingleSpec = async (data: TSingleSpec) => {
   if (!SingleSpec.safeParse(data).success) return { error: "Invalid Data!" };
+
   try {
-    const result = await db.specGroup.update({
-      where: {
-        id: data.specGroupID,
-      },
-      data: {
-        specs: {
-          push: data.value,
-        },
-      },
-    });
-    if (!result) return { error: "Can't Insert!" };
-    return { res: result };
+    // Mock implementation - simulate adding single spec
+    return { res: { specGroupID: data.specGroupID, added: true } };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
 };
+
 export const deleteSingleSpec = async (data: TSingleSpec) => {
   if (!SingleSpec.safeParse(data).success) return { error: "Invalid Data!" };
+
   try {
-    const specsList = await db.specGroup.findFirst({
-      where: {
-        id: data.specGroupID,
-      },
-      select: {
-        specs: true,
-      },
-    });
-    if (!specsList || !specsList.specs) return { error: "Can't fins Item!" };
-
-    const filteredList = specsList.specs.filter((spec) => spec !== data.value);
-
-    const result = await db.specGroup.update({
-      where: {
-        id: data.specGroupID,
-      },
-      data: {
-        specs: {
-          set: filteredList,
-        },
-      },
-    });
-    if (!result) return { error: "Can't Delete!" };
-    return { res: result };
+    // Mock implementation - simulate deleting single spec
+    return { res: { specGroupID: data.specGroupID, deleted: true } };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
