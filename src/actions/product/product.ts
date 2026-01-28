@@ -5,6 +5,8 @@ import { mockCategories } from "@/shared/data/mockCategories";
 import { mockProducts } from "@/shared/data/mockProducts";
 import {
   TAddProductFormValues,
+  TPath,
+  TSpecification,
 } from "@/shared/types/product";
 
 const ValidateAddProduct = z.object({
@@ -82,7 +84,35 @@ export const getOneProduct = async (productID: string) => {
       return { error: "Product not found" };
     }
 
-    return { res: product };
+    // Transform the basic product to TProductPageInfo format
+    const productPageInfo = {
+      id: product.id,
+      name: product.name,
+      isAvailable: product.isAvailable,
+      desc: `Experience the ${product.name} with ${product.specialFeatures.join(", ")}. This premium ${product.brand.name} product delivers exceptional performance and quality.`,
+      images: product.images,
+      optionSets: [], // Mock empty option sets
+      specialFeatures: product.specialFeatures,
+      price: product.price,
+      salePrice: product.salePrice,
+      specifications: [
+        {
+          groupName: "General",
+          specs: [
+            { name: "Brand", value: product.brand.name },
+            { name: "Model", value: product.name },
+            { name: "Availability", value: product.isAvailable ? "In Stock" : "Out of Stock" }
+          ]
+        }
+      ],
+      path: [
+        { id: "1", parentID: null, name: "Home", url: "/" },
+        { id: "2", parentID: "1", name: "Products", url: "/products" },
+        { id: product.id, parentID: "2", name: product.name, url: `/product/${product.id}` }
+      ]
+    };
+
+    return { res: productPageInfo };
   } catch (error) {
     return { error: JSON.stringify(error) };
   }
