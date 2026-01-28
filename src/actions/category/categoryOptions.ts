@@ -67,7 +67,7 @@ export const getOptionSetByCatID = async (categoryID: string) => {
 
   try {
     // Mock implementation - return relevant option sets for category
-    const result = mockOptionSets.filter(optionSet =>
+    const result = mockOptionSets.filter(() =>
       categoryID.startsWith('3') || categoryID.startsWith('2') // Smartphones and tablets
     );
 
@@ -141,7 +141,7 @@ export const getSpecGroupByCatID = async (categoryID: string) => {
 
   try {
     // Mock implementation - return relevant spec groups for category
-    const result = mockSpecGroups.filter(specGroup =>
+    const result = mockSpecGroups.filter(() =>
       categoryID.startsWith('3') || categoryID.startsWith('2') || categoryID.startsWith('1')
     );
 
