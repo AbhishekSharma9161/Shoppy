@@ -12,6 +12,7 @@ const nextConfig = {
         port: "",
       },
     ],
+    unoptimized: true, // This helps with static exports and image serving
   },
   env: {
     IMG_URL: process.env.CLOUDINARY_URL,
@@ -24,6 +25,9 @@ const nextConfig = {
     // Ignore ESLint errors during build
     ignoreDuringBuilds: true,
   },
+  // Ensure static assets are properly served
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  trailingSlash: true,
 };
 
 module.exports = nextConfig;

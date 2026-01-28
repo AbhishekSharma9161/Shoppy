@@ -20,7 +20,7 @@ const CategoryListItem = ({ categoryData, className }: TProps) => {
     >
       <Link href={"/list/" + group.url} className="flex items-center gap-3 text-gray-700 transition-colors duration-300 hover:text-gray-900">
         <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
-          <Image
+          <img
             src={group.iconUrl || "/icons/otherCatIcon.svg"}
             alt={group.name}
             width={group.iconSize[0]}
@@ -32,7 +32,7 @@ const CategoryListItem = ({ categoryData, className }: TProps) => {
       </Link>
       <div>
         {categories && categories.length > 0 && (
-          <Image className={"styles.arrow"} src={"/icons/arrowIcon01.svg"} width={6} height={10} alt="" />
+          <img className={"styles.arrow"} src={"/icons/arrowIcon01.svg"} width={6} height={10} alt="" />
         )}
       </div>
       {!!categories?.length && (
